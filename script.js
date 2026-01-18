@@ -23,6 +23,10 @@ class RiseUpChatbot {
             this.audioCtx = new AudioContext();
             this.breathingAudio = new BreathingAudio(this.audioCtx);
         }
+        // Always try to resume context on user interaction
+        if (this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
     }
 
     init() {
@@ -792,6 +796,13 @@ class RiseUpChatbot {
         this.initAudio(); // Ensure audio context is ready
         this.breathingAudio.start();
 
+        // Update button UI to active state since sound is on by default
+        if (this.breathingSoundBtn) {
+            this.breathingSoundBtn.classList.add('active');
+            const icon = this.breathingSoundBtn.querySelector('svg');
+            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+        }
+
         const runCycle = () => {
             // Inhale - 4s
             this.breathingText.textContent = "Inhale";
@@ -831,6 +842,12 @@ class RiseUpChatbot {
 
     toggleBreathingSound() {
         if (!this.breathingAudio) return;
+
+        // Ensure context is running when toggling
+        if (this.audioCtx && this.audioCtx.state === 'suspended') {
+            this.audioCtx.resume();
+        }
+
         const isMuted = this.breathingAudio.toggleMute();
         const icon = this.breathingSoundBtn.querySelector('svg');
         if (isMuted) {
@@ -1025,7 +1042,7 @@ class BreathingAudio {
         this.ctx = audioCtx;
         this.masterGain = null;
         this.oscillators = [];
-        this.isMuted = true; // Start muted by default or let user toggle
+        this.isMuted = false; // Enable by default so user can hear it immediately
         this.isPlaying = false;
     }
 
@@ -1047,7 +1064,7 @@ class BreathingAudio {
 
             // Individual gain for balance
             const gain = this.ctx.createGain();
-            gain.gain.setValueAtTime(0.08, this.ctx.currentTime); // Lower volume
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime); // Increased volume slightly
 
             // Lowpass filter to soften the sound (remove harshness)
             const filter = this.ctx.createBiquadFilter();
