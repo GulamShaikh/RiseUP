@@ -1239,6 +1239,9 @@ body {
     .input-container {
         padding: 0.5rem;
         background: var(--bg-secondary);
+        max-width: 100vw;
+        box-sizing: border-box;
+        overflow-x: hidden;
     }
 
     .input-wrapper {
