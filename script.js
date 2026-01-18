@@ -19,10 +19,61 @@ class RiseUpChatbot {
         this.cacheElements();
         this.attachEventListeners();
         this.loadSettings();
-        this.loadHistory(); // Load saved messages
-        this.initializeSpeechRecognition();
-        this.checkDailyAffirmation(); // Check for daily affirmation
+        this.checkLoginStatus(); // Check if user is logged in
         this.updateMoodHistoryUI(); // Initial render of mood history
+    }
+
+    checkLoginStatus() {
+        const username = localStorage.getItem('riseup-username');
+        if (username) {
+            this.showChat(username, false); // false means don't show welcome message again if just refreshing
+        } else {
+            this.showLogin();
+        }
+    }
+
+    showLogin() {
+        document.getElementById('login-screen').style.display = 'flex';
+        document.querySelector('.app-container').style.display = 'none';
+
+        const loginBtn = document.getElementById('login-btn');
+        const usernameInput = document.getElementById('username-input');
+
+        const handleLogin = () => {
+            const name = usernameInput.value.trim();
+            if (name) {
+                localStorage.setItem('riseup-username', name);
+                this.showChat(name, true); // true means show welcome message
+            }
+        };
+
+        loginBtn.onclick = handleLogin;
+        usernameInput.onkeypress = (e) => {
+            if (e.key === 'Enter') handleLogin();
+        };
+    }
+
+    showChat(username, isNewLogin) {
+        document.getElementById('login-screen').style.display = 'none';
+        document.querySelector('.app-container').style.display = 'block'; // Or flex, depending on CSS
+
+        // Ensure proper display style
+        document.querySelector('.app-container').style.removeProperty('display');
+
+        if (isNewLogin) {
+            // Add personalized welcome message
+            const welcomeMsg = `Hello ${username}! I'm Rise Up, your AI companion for emotional support and motivation. 🌟\n\nI'm here to listen, support you, and help you find your inner strength. How are you feeling today?`;
+
+            // Clear previous empty welcome messages if any
+            this.chatMessages.innerHTML = '';
+            this.addMessage(welcomeMsg, 'bot');
+            this.playSound('open');
+        } else {
+            // Just ensure elements are cached and listeners attached if not already
+            this.loadHistory(); // Load history only if not new login to avoid duplicates or overwrites
+            this.checkDailyAffirmation();
+        }
+        this.initializeSpeechRecognition();
     }
 
     cacheElements() {

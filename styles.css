@@ -1460,3 +1460,101 @@ input:focus-visible {
     background: linear-gradient(135deg, rgba(67, 233, 123, 0.3), rgba(56, 249, 215, 0.3));
     box-shadow: 0 0 20px rgba(67, 233, 123, 0.3);
 }
+/* ===========================
+   Login Screen
+   =========================== */
+.login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 2000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-md);
+    background: transparent;
+}
+
+.login-content {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: var(--radius-xl);
+    padding: var(--spacing-xl);
+    text-align: center;
+    max-width: 400px;
+    width: 100%;
+    box-shadow: var(--shadow-lg);
+    animation: slideUp 0.5s ease-out;
+}
+
+.login-logo {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto var(--spacing-md);
+    animation: float 6s infinite ease-in-out;
+}
+
+.login-content h1 {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    margin-bottom: var(--spacing-sm);
+    background: var(--primary-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.login-subtitle {
+    color: var(--text-muted);
+    margin-bottom: var(--spacing-lg);
+    font-size: 1rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+#username-input {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.2);
+    color: var(--text-primary);
+    font-size: 1.1rem;
+    text-align: center;
+    transition: all var(--transition-base);
+}
+
+#username-input:focus {
+    outline: none;
+    border-color: var(--accent-purple);
+    background: rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 4px rgba(195, 113, 245, 0.1);
+}
+
+#login-btn {
+    width: 100%;
+    padding: 16px;
+    border-radius: var(--radius-lg);
+    border: none;
+    background: var(--primary-gradient);
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-base);
+    box-shadow: var(--shadow-sm);
+}
+
+#login-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(195, 113, 245, 0.4);
+}
+
+#login-btn:active {
+    transform: translateY(0);
+}
+
