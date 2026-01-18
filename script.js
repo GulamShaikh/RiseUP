@@ -11,6 +11,8 @@ class RiseUpChatbot {
             soundEffects: true,
             animations: true
         };
+        this.ttsEnabled = false; // Default off, user can toggle
+        this.synth = window.speechSynthesis;
 
         this.init();
     }
@@ -98,6 +100,7 @@ class RiseUpChatbot {
         this.resourcesModal = document.getElementById('resources-modal');
 
         this.moodTrackerBtn = document.getElementById('mood-tracker-btn');
+        this.ttsToggleBtn = document.getElementById('tts-toggle-btn');
         this.settingsBtn = document.getElementById('settings-btn');
         this.getHelpBtn = document.getElementById('get-help-btn');
 
@@ -136,6 +139,7 @@ class RiseUpChatbot {
 
         // Modals
         this.moodTrackerBtn.addEventListener('click', () => this.openModal(this.moodModal));
+        this.ttsToggleBtn.addEventListener('click', () => this.toggleTTS());
         this.settingsBtn.addEventListener('click', () => this.openModal(this.settingsModal));
         this.closeMoodModal.addEventListener('click', () => this.closeModal(this.moodModal));
         this.closeSettingsModal.addEventListener('click', () => this.closeModal(this.settingsModal));
@@ -364,6 +368,7 @@ class RiseUpChatbot {
 
             this.hideTypingIndicator();
             this.addMessage(response, 'bot');
+            this.speakResponse(response);
             this.playSound('message');
         } catch (error) {
             // Using offline mode (built-in emotional support responses)
@@ -372,6 +377,7 @@ class RiseUpChatbot {
                 this.hideTypingIndicator();
                 const response = this.generateMockResponse(text);
                 this.addMessage(response, 'bot');
+                this.speakResponse(response);
                 this.playSound('message');
             }, 1000 + Math.random() * 1000);
         }
@@ -822,8 +828,51 @@ class RiseUpChatbot {
 
         setTimeout(() => {
             this.addMessage(response, 'bot');
+            this.speakResponse(response);
             this.playSound('message');
         }, 300);
+    }
+
+    // ===========================
+    // Text-to-Speech
+    // ===========================
+
+    toggleTTS() {
+        this.ttsEnabled = !this.ttsEnabled;
+        const icon = this.ttsToggleBtn.querySelector('svg');
+
+        if (this.ttsEnabled) {
+            this.ttsToggleBtn.classList.add('active');
+            // Show volume up icon
+            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+            this.playSound('click');
+        } else {
+            this.ttsToggleBtn.classList.remove('active');
+            this.synth.cancel(); // Stop speaking immediately
+            // Show volume off icon
+            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+        }
+    }
+
+    speakResponse(text) {
+        if (!this.ttsEnabled) return;
+
+        // Clean text (remove formatting like **bold**)
+        const cleanText = text.replace(/\*\*/g, '').replace(/\*/g, '');
+
+        const utterance = new SpeechSynthesisUtterance(cleanText);
+        utterance.lang = 'en-US';
+        utterance.rate = 1.0;
+        utterance.pitch = 1.0;
+
+        // Try to select a better voice
+        const voices = this.synth.getVoices();
+        const preferredVoice = voices.find(voice => voice.name.includes('Google US English') || voice.name.includes('Female'));
+        if (preferredVoice) {
+            utterance.voice = preferredVoice;
+        }
+
+        this.synth.speak(utterance);
     }
 
     // ===========================

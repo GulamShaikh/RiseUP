@@ -245,7 +245,6 @@ body {
 .icon-btn {
     width: 44px;
     height: 44px;
-    border: none;
     background: var(--bg-glass);
     border-radius: var(--radius-md);
     color: var(--text-secondary);
@@ -255,6 +254,13 @@ body {
     justify-content: center;
     transition: all var(--transition-base);
     border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.icon-btn.active {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: var(--shadow-glow);
+    border-color: transparent;
 }
 
 .icon-btn:hover {
@@ -1460,6 +1466,7 @@ input:focus-visible {
     background: linear-gradient(135deg, rgba(67, 233, 123, 0.3), rgba(56, 249, 215, 0.3));
     box-shadow: 0 0 20px rgba(67, 233, 123, 0.3);
 }
+
 /* ===========================
    Login Screen
    =========================== */
@@ -1557,4 +1564,3 @@ input:focus-visible {
 #login-btn:active {
     transform: translateY(0);
 }
-
