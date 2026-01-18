@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="description"
+        content="Rise Up - Your AI companion for emotional support, motivation, and mental wellness">
+    <meta name="author" content="Rise Up">
+    <meta property="og:title" content="Rise Up - AI Emotional Support Chatbot">
+    <meta property="og:description"
+        content="Chat with Rise Up to reduce sadness, find motivation, and improve your mental wellness">
+    <meta property="og:type" content="website">
+    <title>Rise Up - Your AI Companion for Emotional Support</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Background Elements -->
+    <div class="background-gradient"></div>
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z"
+                            fill="url(#logo-gradient)" />
+                        <defs>
+                            <linearGradient id="logo-gradient" x1="2" y1="2" x2="22" y2="21.02">
+                                <stop offset="0%" stop-color="#FF6B9D" />
+                                <stop offset="100%" stop-color="#C371F5" />
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </div>
+                <h1 class="logo-text">Rise Up</h1>
+            </div>
+            <div class="header-actions">
+                <button class="icon-btn" id="mood-tracker-btn" title="Track Your Mood">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10" />
+                        <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                        <line x1="9" y1="9" x2="9.01" y2="9" />
+                        <line x1="15" y1="9" x2="15.01" y2="9" />
+                    </svg>
+                </button>
+                <button class="icon-btn" id="settings-btn" title="Settings">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M12 1v6m0 6v6M5.64 5.64l4.24 4.24m4.24 4.24l4.24 4.24M1 12h6m6 0h6M5.64 18.36l4.24-4.24m4.24-4.24l4.24-4.24" />
+                    </svg>
+                </button>
+            </div>
+        </header>
+
+        <!-- Chat Container -->
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+                <!-- Welcome Message -->
+                <div class="message bot-message welcome-message">
+                    <div class="message-avatar">
+                        <div class="avatar-gradient"></div>
+                        <span class="avatar-emoji">✨</span>
+                    </div>
+                    <div class="message-content">
+                        <div class="message-bubble">
+                            <p>Hello! I'm Rise Up, your AI companion for emotional support and motivation. 🌟</p>
+                            <p>I'm here to listen, support you, and help you find your inner strength. How are you
+                                feeling today?</p>
+                        </div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions" id="quick-actions">
+                <button class="quick-action-btn" data-message="I'm feeling sad today">😔 Feeling Sad</button>
+                <button class="quick-action-btn" data-message="I need motivation">💪 Need Motivation</button>
+                <button class="quick-action-btn" data-message="I'm stressed">😰 Feeling Stressed</button>
+                <button class="quick-action-btn" id="breathing-btn">🧘‍♀️ Breathing Exercise</button>
+                <button class="quick-action-btn" data-message="I want to talk">💬 Just Talk</button>
+                <button class="quick-action-btn" id="get-help-btn" style="border-color: #ff6b6b; color: #ff6b6b;">🆘 Get
+                    Help</button>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-container">
+                <div class="input-wrapper">
+                    <button class="input-icon-btn" id="voice-btn" title="Voice Input">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                            <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                            <line x1="12" y1="19" x2="12" y2="23" />
+                            <line x1="8" y1="23" x2="16" y2="23" />
+                        </svg>
+                    </button>
+                    <input type="text" id="message-input" class="message-input" placeholder="Share your thoughts..."
+                        autocomplete="off">
+                    <button class="send-btn" id="send-btn" title="Send Message">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+                            <line x1="22" y1="2" x2="11" y2="13" />
+                            <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mood Tracker Modal -->
+        <div class="modal" id="mood-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>How are you feeling?</h2>
+                    <button class="close-btn" id="close-mood-modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="mood-options">
+                    <button class="mood-btn" data-mood="amazing">
+                        <span class="mood-emoji">🤩</span>
+                        <span class="mood-label">Amazing</span>
+                    </button>
+                    <button class="mood-btn" data-mood="happy">
+                        <span class="mood-emoji">😊</span>
+                        <span class="mood-label">Happy</span>
+                    </button>
+                    <button class="mood-btn" data-mood="okay">
+                        <span class="mood-emoji">😐</span>
+                        <span class="mood-label">Okay</span>
+                    </button>
+                    <button class="mood-btn" data-mood="sad">
+                        <span class="mood-emoji">😔</span>
+                        <span class="mood-label">Sad</span>
+                    </button>
+                    <button class="mood-btn" data-mood="anxious">
+                        <span class="mood-emoji">😰</span>
+                        <span class="mood-label">Anxious</span>
+                    </button>
+                </div>
+                <div class="mood-history-section"
+                    style="border-top: 1px solid rgba(255,255,255,0.1); padding: 20px; margin-top: 20px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.1rem; color: var(--text-secondary);">Recent Moods</h3>
+                    <div id="mood-history-list"
+                        style="display: flex; gap: 10px; overflow-x: auto; padding-bottom: 10px;">
+                        <!-- Mood history items will be populated here -->
+                        <span style="color: var(--text-muted); font-size: 0.9rem;">No mood history yet.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Modal -->
+        <div class="modal" id="resources-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Get Help</h2>
+                    <button class="close-btn" id="close-resources-modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="resources-content" style="padding: 24px;">
+                    <div class="resource-card"
+                        style="background: rgba(255, 99, 99, 0.1); border: 1px solid rgba(255, 99, 99, 0.3); padding: 16px; border-radius: 12px; margin-bottom: 16px;">
+                        <h3 style="color: #ff6b6b; margin-bottom: 8px;">🚨 Crisis Support</h3>
+                        <p style="margin-bottom: 8px;">If you are in immediate danger or need urgent help:</p>
+                        <ul style="list-style: none;">
+                            <li style="margin-bottom: 4px;"><strong>National Suicide Prevention Lifeline:</strong> 988
+                            </li>
+                            <li><strong>Crisis Text Line:</strong> Text HOME to 741741</li>
+                        </ul>
+                    </div>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Rise Up is an AI companion and cannot
+                        replace professional mental health care.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Breathing Exercise Modal -->
+        <div class="modal" id="breathing-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Breathing Exercise</h2>
+                    <button class="close-btn" id="close-breathing-modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="breathing-container"
+                    style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 60px 24px; min-height: 300px;">
+                    <div class="breathing-circle"
+                        style="width: 150px; height: 150px; border-radius: 50%; background: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(195, 113, 245, 0.3)); border: 3px solid rgba(255, 255, 255, 0.3); display: flex; align-items: center; justify-content: center; transition: all 4s cubic-bezier(0.4, 0, 0.2, 1);">
+                    </div>
+                    <p class="breathing-text"
+                        style="margin-top: 32px; font-size: 1.5rem; font-weight: 600; color: var(--text-primary); text-align: center;">
+                        Inhale</p>
+                    <p style="margin-top: 16px; color: var(--text-muted); text-align: center; max-width: 300px;">Follow
+                        the circle. Breathe in for 4 seconds, hold for 4 seconds, breathe out for 4 seconds.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Settings Modal -->
+        <div class="modal" id="settings-modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Settings</h2>
+                    <button class="close-btn" id="close-settings-modal">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18" />
+                            <line x1="6" y1="6" x2="18" y2="18" />
+                        </svg>
+                    </button>
+                </div>
+                <div class="settings-content">
+                    <div class="setting-item">
+                        <label for="theme-toggle">
+                            <span class="setting-label">Dark Mode</span>
+                            <span class="setting-description">Toggle dark/light theme</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="theme-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="sound-toggle">
+                            <span class="setting-label">Sound Effects</span>
+                            <span class="setting-description">Enable notification sounds</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="sound-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item">
+                        <label for="animations-toggle">
+                            <span class="setting-label">Animations</span>
+                            <span class="setting-description">Enable smooth animations</span>
+                        </label>
+                        <label class="toggle-switch">
+                            <input type="checkbox" id="animations-toggle" checked>
+                            <span class="toggle-slider"></span>
+                        </label>
+                    </div>
+                    <div class="setting-item" style="cursor: default;">
+                        <button id="clear-history-btn" class="settings-action-btn"
+                            style="width: 100%; padding: 12px; background: rgba(255, 107, 157, 0.1); color: #ff6b9d; border: 1px solid rgba(255, 107, 157, 0.3); border-radius: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            🗑️ Clear Conversation History
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="script.js"></script>
+</body>
+
+</html>
