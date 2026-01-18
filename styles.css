@@ -1270,9 +1270,13 @@ body {
     }
 
     .send-btn svg line,
-    .send-btn svg polygon {
+    .send-btn svg polygon,
+    .send-btn:active svg line,
+    .send-btn:active svg polygon {
         stroke: white !important;
         stroke-width: 2px !important;
+        opacity: 1 !important;
+        fill: none !important;
     }
 
     /* Voice button optimization */
