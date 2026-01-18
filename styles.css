@@ -1262,6 +1262,9 @@ body {
     .send-btn svg {
         width: 18px;
         height: 18px;
+        stroke: white !important;
+        stroke-width: 2px;
+        fill: none;
     }
 
     /* Voice button optimization */
