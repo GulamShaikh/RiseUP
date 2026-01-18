@@ -1265,6 +1265,14 @@ body {
         stroke: white !important;
         stroke-width: 2px;
         fill: none;
+        overflow: visible;
+        /* Ensure arrow doesn't get clipped */
+    }
+
+    .send-btn svg line,
+    .send-btn svg polygon {
+        stroke: white !important;
+        stroke-width: 2px !important;
     }
 
     /* Voice button optimization */
