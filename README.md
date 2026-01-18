@@ -37,7 +37,22 @@ https://vercel.com/new/clone?repository-url=https://github.com/YOUR_USERNAME/YOU
 - Hands-free interaction
 - Accessible voice controls
 
-### 🎨 Premium Design
+### �️ Breathing Exercise with Audio
+- Visual breathing circle (Inhale, Hold, Exhale)
+- **Generative Audio**: Calming ambient music that syncs with breathing
+- Mute/Unmute toggle
+
+### 🗣️ Text-to-Speech (TTS)
+- The AI speaks responses back to you
+- Toggle on/off for privacy
+- Natural, calming voice
+
+### 👤 Personalized Welcome
+- Simple "Guest Login" to remember your name
+- Personal Greetings
+- Private & Local (no signup required)
+
+### �🎨 Premium Design
 
 - Glassmorphism effects
 - Smooth animations and transitions
@@ -80,12 +95,11 @@ Rise Up provides specialized responses for:
     npm install
     ```
 
-3.  **(Optional) Setup API Key**:
+3.  **Setup API Key**:
 
     - Copy `.env.example` to `.env`
     - Get your free Gemini API key from [Google AI Studio](https://makersuite.google.com/app/apikey)
     - Add your key: `VITE_GEMINI_API_KEY=your_key_here`
-    - **Note**: App works offline without API key using built-in responses
 
 4.  **Start the development server**:
 
@@ -102,26 +116,27 @@ Rise Up provides specialized responses for:
 2. In Vercel dashboard, add environment variable: `VITE_GEMINI_API_KEY`
 3. Deploy and share your app!
 
-**Mobile Support**: The app works perfectly on mobile! If the Gemini API isn't available, it automatically uses built-in emotional support responses.
+**Mobile Support**: The app works perfectly on mobile!
 
 ## Technology Stack
 
 - **HTML5** - Semantic structure
-- **CSS3** - Modern styling with custom properties
-- **Vanilla JavaScript** - No dependencies, pure ES6+
-- **Gemini AI** - Google's AI for intelligent responses (with offline fallback)
-- **Web Speech API** - Voice recognition
-- **Local Storage** - Settings persistence
+- **CSS3** - Mobile-first, Responsive, Modern styling
+- **Vanilla JavaScript** - No framework bloat, high performance
+- **Gemini AI** - Google's AI for intelligent responses
+- **Web Audio API** - Generative ambient sound engine
+- **Web Speech API** - Voice recognition & Text-to-Speech
+- **Local Storage** - Settings & History persistence
 - **Vite** - Fast development and build tool
 
 ## Browser Support
 
-- Chrome/Edge (recommended)
+- Chrome/Edge (recommended for full Voice features)
 - Firefox
 - Safari
 - Opera
 
-_Note: Voice recognition works best in Chrome/Edge_
+_Note: Voice features work best in Chrome/Edge_
 
 ## Design Philosophy
 
@@ -135,13 +150,13 @@ Rise Up is built with these principles:
 
 ## Future Enhancements
 
-- [ ] Integration with real AI APIs (OpenAI, Anthropic)
-- [ ] Conversation history and export
-- [ ] Guided meditation and breathing exercises
-- [ ] Daily affirmations and quotes
-- [ ] Progress tracking and insights
+- [x] Integration with Real AI (Gemini 2.5 Flash)
+- [x] Guided breathing exercises with Audio
+- [x] Text-to-Speech support
+- [ ] **Daily Streak & Gamification** (Keep users motivated)
+- [ ] **Safety Plan / Crisis SOS Button**
+- [ ] Conversation history export
 - [ ] Multi-language support
-- [ ] Professional resources directory
 
 ## Privacy & Security
 
