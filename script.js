@@ -17,6 +17,14 @@ class RiseUpChatbot {
         this.init();
     }
 
+    initAudio() {
+        if (!this.audioCtx) {
+            const AudioContext = window.AudioContext || window.webkitAudioContext;
+            this.audioCtx = new AudioContext();
+            this.breathingAudio = new BreathingAudio(this.audioCtx);
+        }
+    }
+
     init() {
         this.cacheElements();
         this.attachEventListeners();
@@ -90,6 +98,7 @@ class RiseUpChatbot {
 
         this.breathingBtn = document.getElementById('breathing-btn');
         this.breathingModal = document.getElementById('breathing-modal');
+        this.breathingSoundBtn = document.getElementById('breathing-sound-btn'); // New toggle
         this.closeBreathingModal = document.getElementById('close-breathing-modal');
         this.breathingCircle = document.querySelector('.breathing-circle');
         this.breathingText = document.querySelector('.breathing-text');
@@ -157,6 +166,9 @@ class RiseUpChatbot {
                     this.stopBreathing();
                 }
             });
+        }
+        if (this.breathingSoundBtn) {
+            this.breathingSoundBtn.addEventListener('click', () => this.toggleBreathingSound());
         }
 
         // Resources
@@ -777,23 +789,28 @@ class RiseUpChatbot {
 
     startBreathing() {
         this.openModal(this.breathingModal);
+        this.initAudio(); // Ensure audio context is ready
+        this.breathingAudio.start();
 
         const runCycle = () => {
             // Inhale - 4s
             this.breathingText.textContent = "Inhale";
             this.breathingCircle.className = 'breathing-circle inhale';
+            this.breathingAudio.rampTo('inhale');
 
             setTimeout(() => {
                 // Hold - 4s
                 if (!this.breathingModal.classList.contains('active')) return;
                 this.breathingText.textContent = "Hold";
                 this.breathingCircle.className = 'breathing-circle hold';
+                this.breathingAudio.rampTo('hold');
 
                 setTimeout(() => {
                     // Exhale - 4s
                     if (!this.breathingModal.classList.contains('active')) return;
                     this.breathingText.textContent = "Exhale";
                     this.breathingCircle.className = 'breathing-circle exhale';
+                    this.breathingAudio.rampTo('exhale');
                 }, 4000);
             }, 4000);
         };
@@ -807,6 +824,22 @@ class RiseUpChatbot {
         clearInterval(this.breathingInterval);
         this.breathingCircle.className = 'breathing-circle';
         this.breathingText.textContent = "Inhale";
+        if (this.breathingAudio) {
+            this.breathingAudio.stop();
+        }
+    }
+
+    toggleBreathingSound() {
+        if (!this.breathingAudio) return;
+        const isMuted = this.breathingAudio.toggleMute();
+        const icon = this.breathingSoundBtn.querySelector('svg');
+        if (isMuted) {
+            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><line x1="23" y1="9" x2="17" y2="15"></line><line x1="17" y1="9" x2="23" y2="15"></line>';
+            this.breathingSoundBtn.classList.remove('active');
+        } else {
+            icon.innerHTML = '<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"></path>';
+            this.breathingSoundBtn.classList.add('active');
+        }
     }
 
     // ===========================
@@ -986,3 +1019,135 @@ class RiseUpChatbot {
 document.addEventListener('DOMContentLoaded', () => {
     window.riseUpBot = new RiseUpChatbot();
 });
+
+class BreathingAudio {
+    constructor(audioCtx) {
+        this.ctx = audioCtx;
+        this.masterGain = null;
+        this.oscillators = [];
+        this.isMuted = true; // Start muted by default or let user toggle
+        this.isPlaying = false;
+    }
+
+    setup() {
+        if (this.masterGain) return;
+
+        this.masterGain = this.ctx.createGain();
+        this.masterGain.gain.setValueAtTime(0, this.ctx.currentTime);
+        this.masterGain.connect(this.ctx.destination);
+
+        // Lower, warmer frequencies (Deep C Major 7th Chord)
+        // C2=65.41, G2=98.00, B2=123.47, E3=164.81
+        const freqs = [65.41, 98.00, 123.47, 164.81];
+
+        freqs.forEach(freq => {
+            const osc = this.ctx.createOscillator();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+
+            // Individual gain for balance
+            const gain = this.ctx.createGain();
+            gain.gain.setValueAtTime(0.08, this.ctx.currentTime); // Lower volume
+
+            // Lowpass filter to soften the sound (remove harshness)
+            const filter = this.ctx.createBiquadFilter();
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(400, this.ctx.currentTime);
+
+            osc.connect(filter);
+            filter.connect(gain);
+            gain.connect(this.masterGain);
+
+            osc.start();
+            this.oscillators.push({ osc, gain, filter });
+        });
+    }
+
+    start() {
+        this.setup();
+        this.isPlaying = true;
+        if (!this.isMuted) {
+            this.fadeIn();
+        }
+    }
+
+    stop() {
+        if (!this.masterGain) return;
+
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+        this.masterGain.gain.exponentialRampToValueAtTime(0.001, now + 1.5); // Slower fade out
+
+        this.isPlaying = false;
+
+        setTimeout(() => {
+            if (!this.isPlaying) {
+                this.oscillators.forEach(o => {
+                    o.osc.stop();
+                    o.osc.disconnect();
+                });
+                this.oscillators = [];
+                this.masterGain.disconnect();
+                this.masterGain = null;
+            }
+        }, 1600);
+    }
+
+    fadeIn() {
+        if (!this.masterGain) return;
+        const now = this.ctx.currentTime;
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(0.001, now);
+        this.masterGain.gain.linearRampToValueAtTime(0.2, now + 3); // Slow gentle fade in
+    }
+
+    rampTo(state) {
+        if (!this.masterGain || this.isMuted) return;
+
+        const now = this.ctx.currentTime;
+        // Cancel previous ramps to prevent conflict
+        this.masterGain.gain.cancelScheduledValues(now);
+        this.masterGain.gain.setValueAtTime(this.masterGain.gain.value, now);
+
+        // Sync with 4s timing
+        if (state === 'inhale') {
+            // Swell volume gently (Inhale = Rising energy)
+            this.masterGain.gain.linearRampToValueAtTime(0.3, now + 3.8);
+
+            // Subtle filter opening
+            this.oscillators.forEach(o => {
+                o.filter.frequency.linearRampToValueAtTime(600, now + 3.8);
+            });
+
+        } else if (state === 'hold') {
+            // Sustain (Hold = Stability)
+            // Slight dip then hold steady
+            this.masterGain.gain.linearRampToValueAtTime(0.28, now + 3.8);
+
+        } else if (state === 'exhale') {
+            // Decrease volume gently (Exhale = Release)
+            this.masterGain.gain.linearRampToValueAtTime(0.05, now + 3.8);
+
+            // Close filter
+            this.oscillators.forEach(o => {
+                o.filter.frequency.linearRampToValueAtTime(200, now + 3.8);
+            });
+        }
+    }
+
+    toggleMute() {
+        this.isMuted = !this.isMuted;
+        if (this.masterGain) {
+            if (this.isMuted) {
+                this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+                this.masterGain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
+            } else {
+                this.masterGain.gain.cancelScheduledValues(this.ctx.currentTime);
+                this.masterGain.gain.linearRampToValueAtTime(0.3, this.ctx.currentTime + 0.5);
+            }
+        }
+        return this.isMuted;
+    }
+}
+
